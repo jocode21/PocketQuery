@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PocketQuery — Training metrics</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header>
+  <h1>Training metrics</h1>
+  <p><a href="/">Back to PocketQuery</a></p>
+</header>
+<main>
+{% if metrics %}
+  <p><strong>Mode:</strong> {{ metrics.mode }} &nbsp; <strong>Parameters:</strong> {{ metrics.parameters }} &nbsp; <strong>Train examples:</strong> {{ metrics.train_examples }} &nbsp; <strong>Epochs:</strong> {{ metrics.epochs }} &nbsp; <strong>Device:</strong> {{ metrics.device }} &nbsp; <strong>Time:</strong> {{ metrics.seconds }}s</p>
+  <h2>Loss per epoch</h2>
+  <ol>
+    {% for loss in metrics.loss_history %}
+    <li>Epoch {{ loop.index }}: {{ loss }}</li>
+    {% endfor %}
+  </ol>
+  <h2>Validation results ({{ metrics.eval_rows }} questions, greedy decoding)</h2>
+  <ul>
+    <li>Exact match: {{ (metrics.exact_match * 100) | round(1) }}% ({{ metrics.exact_match_n }} / {{ metrics.eval_rows }})</li>
+    <li>SELECT execution accuracy: {{ (metrics.select_execution_accuracy * 100) | round(1) }}% ({{ metrics.select_execution_n }} SELECT questions)</li>
+    <li>Writes that produced valid SQL that runs: {{ (metrics.write_valid_and_runs * 100) | round(1) }}% ({{ metrics.write_n }} write questions)</li>
+  </ul>
+  <p>These numbers are measured on held-out validation questions the model did not train on. Full training: 30 epochs on RTX 3050, device cuda.</p>
+  <h2>Samples</h2>
+  {% for s in metrics.samples %}
+  <p><strong>{{ s.input }}</strong><br>Expected: <code>{{ s.expected }}</code><br>Generated: <code>{{ s.generated }}</code></p>
+  {% endfor %}
+{% else %}
+  <p>No training has been run yet.</p>
+  <p>Quick check on this machine: <code>python train.py --smoke</code></p>
+  <p>Full training on Joel's PC (RTX 3050): <code>python train.py --full</code></p>
+{% endif %}
+</main>
+</body>
+</html>

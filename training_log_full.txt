@@ -1,0 +1,95 @@
+device=cuda train_rows=12800 val_rows=1600 vocab=1291
+parameters: 12,231,691
+epoch 1/30 loss=2.7602 (38s)
+epoch 2/30 loss=0.2756 (74s)
+epoch 3/30 loss=0.1621 (110s)
+epoch 4/30 loss=0.1156 (146s)
+epoch 5/30 loss=0.0900 (180s)
+epoch 6/30 loss=0.0724 (215s)
+epoch 7/30 loss=0.0607 (253s)
+epoch 8/30 loss=0.0524 (289s)
+epoch 9/30 loss=0.0460 (324s)
+epoch 10/30 loss=0.0413 (355s)
+epoch 11/30 loss=0.0381 (381s)
+epoch 12/30 loss=0.0349 (406s)
+epoch 13/30 loss=0.0310 (432s)
+epoch 14/30 loss=0.0293 (458s)
+epoch 15/30 loss=0.0259 (483s)
+epoch 16/30 loss=0.0243 (509s)
+epoch 17/30 loss=0.0215 (535s)
+epoch 18/30 loss=0.0200 (560s)
+epoch 19/30 loss=0.0173 (586s)
+epoch 20/30 loss=0.0153 (611s)
+epoch 21/30 loss=0.0133 (637s)
+epoch 22/30 loss=0.0121 (662s)
+epoch 23/30 loss=0.0102 (687s)
+epoch 24/30 loss=0.0091 (712s)
+epoch 25/30 loss=0.0082 (747s)
+epoch 26/30 loss=0.0077 (785s)
+epoch 27/30 loss=0.0070 (824s)
+epoch 28/30 loss=0.0068 (860s)
+epoch 29/30 loss=0.0064 (897s)
+epoch 30/30 loss=0.0065 (931s)
+python : 
+C:\Users\joelj\Downloads\PocketQuery_v1\pocketquery\.venv\Lib\site-packages\torch\nn\modules\transformer.py:533: 
+UserWarning: The PyTorch API of nested tensors is in prototype stage and will change in the near future. We recommend 
+specifying layout=torch.jagged when constructing a nested tensor, as this layout receives active development, has 
+better operator coverage, and works with torch.compile. (Triggered internally at 
+C:\actions-runner\_work\pytorch\pytorch\aten\src\ATen\NestedTensorImpl.cpp:181.)
+At line:1 char:1
++ python train.py --full > training_log_full.txt 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (C:\Users\joelj\...rImpl.cpp:181.):String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+  output = torch._nested_tensor_from_mask(
+saved data/model.pt
+{
+ "eval_rows": 200,
+ "exact_match": 0.905,
+ "exact_match_n": 181,
+ "select_execution_accuracy": 0.9936305732484076,
+ "select_execution_n": 157,
+ "write_valid_and_runs": 1.0,
+ "write_n": 43,
+ "mode": "full",
+ "epochs": 30,
+ "train_examples": 12800,
+ "batch_size": 32,
+ "lr": 0.0003,
+ "device": "cuda",
+ "seconds": 1034,
+ "loss_history": [
+  2.7602,
+  0.2756,
+  0.1621,
+  0.1156,
+  0.09,
+  0.0724,
+  0.0607,
+  0.0524,
+  0.046,
+  0.0413,
+  0.0381,
+  0.0349,
+  0.031,
+  0.0293,
+  0.0259,
+  0.0243,
+  0.0215,
+  0.02,
+  0.0173,
+  0.0153,
+  0.0133,
+  0.0121,
+  0.0102,
+  0.0091,
+  0.0082,
+  0.0077,
+  0.007,
+  0.0068,
+  0.0064,
+  0.0065
+ ],
+ "parameters": 12231691
+}

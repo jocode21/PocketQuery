@@ -1,0 +1,7 @@
+*.pyc
+__pycache__/
+.venv/
+venv/
+data/model.pt
+data/history.json
+data/_ref.db

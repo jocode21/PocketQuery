@@ -1,0 +1,54 @@
+{
+ "eval_rows": 200,
+ "exact_match": 0.0,
+ "exact_match_n": 0,
+ "select_execution_accuracy": 0.012738853503184714,
+ "select_execution_n": 157,
+ "write_valid_and_runs": 0.27906976744186046,
+ "write_n": 43,
+ "samples": [
+  {
+   "input": "remove attendance record for student 18 course 2",
+   "expected": "DELETE FROM attendance WHERE student_id = 18 AND course_id = 2;",
+   "generated": "DELETE FROM attendance WHERE student_id = AND course_id = 4;",
+   "op": "DELETE"
+  },
+  {
+   "input": "update attendance of student 19 in course 8 to 79",
+   "expected": "UPDATE attendance SET percent = 79 WHERE student_id = 19 AND course_id = 8;",
+   "generated": "UPDATE attendance SET percent = WHERE student_id = 4 AND course_id = 3;",
+   "op": "UPDATE"
+  },
+  {
+   "input": "list students with attendance from 81 to 83",
+   "expected": "SELECT students.name, attendance.percent FROM students JOIN attendance ON students.id = attendance.student_id WHERE attendance.percent BETWEEN 81 AND 83;",
+   "generated": "SELECT students.name, attendance.percent FROM students JOIN attendance ON students.id = attendance.student_id WHERE attendance.percent BETWEEN 55 AND attendance.percent < 611;",
+   "op": "SELECT"
+  },
+  {
+   "input": "show students in Artificial Intelligence with marks below 76",
+   "expected": "SELECT students.name, marks.marks FROM students JOIN marks ON students.id = marks.student_id JOIN courses ON marks.course_id = courses.id WHERE courses.name = 'Artificial Intelligence' AND marks.marks < 76 ORDER BY marks.marks ASC;",
+   "generated": "SELECT students.name, marks.marks FROM students JOIN marks ON students.id = marks.student_id JOIN courses ON marks.course_id = courses.id WHERE courses.name = ' AND marks.marks < 63 ORDER BY marks.marks ASC;",
+   "op": "SELECT"
+  },
+  {
+   "input": "list students in Thermodynamics who scored more than 81",
+   "expected": "SELECT students.name, marks.marks FROM students JOIN marks ON students.id = marks.student_id JOIN courses ON marks.course_id = courses.id WHERE courses.name = 'Thermodynamics' AND marks.marks > 81 ORDER BY marks.marks DESC;",
+   "generated": "SELECT students.name, marks.marks FROM students JOIN marks ON students.id = marks.student_id JOIN courses ON marks.course_id = courses.id WHERE courses.name = ' AND marks.marks > 73 ORDER BY marks.marks DESC;",
+   "op": "SELECT"
+  }
+ ],
+ "mode": "smoke",
+ "epochs": 3,
+ "train_examples": 2000,
+ "batch_size": 32,
+ "lr": 0.0003,
+ "device": "cpu",
+ "seconds": 782,
+ "loss_history": [
+  11.4856,
+  2.1545,
+  1.3924
+ ],
+ "parameters": 12231691
+}

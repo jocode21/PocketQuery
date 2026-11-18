@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PocketQuery — English to SQL, trained from scratch</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<header>
+  <h1>PocketQuery</h1>
+  <p>A tiny transformer trained from scratch. Type English, get SQL with real result.</p>
+  <nav>
+    <a href="/metrics">Training metrics</a>
+    <form action="/reset" method="post" onsubmit="return confirm('Reset the database to its original sample data? Your current rows will be replaced.');" style="display:inline">
+      <button type="submit" class="danger">Reset database</button>
+    </form>
+  </nav>
+</header>
+
+<main>
+  <section class="ask">
+    <form action="/ask" method="post">
+      <label for="question">Ask the college database</label>
+      <input id="question" name="question" type="text" autocomplete="off"
+             placeholder="Type your question about the college database..."
+             required>
+      <button type="submit">Generate SQL</button>
+    </form>
+    <p class="hint">Free wording, about students, courses, marks, faculty or attendance. SELECT runs at once; adding, updating or deleting asks you to confirm first. Dropping tables is never allowed.</p>
+  </section>
+
+  {% if result %}
+  <section class="result">
+    {% if result.ok %}
+      <h2>SQL</h2>
+      <pre id="sql">{{ result.sql }}</pre>
+      <button onclick="navigator.clipboard.writeText(document.getElementById('sql').innerText); this.textContent='Copied!';">Copy SQL</button>
+      {% if result.needs_confirmation %}
+        <p class="warn">This will change the database. Preview: it would affect <strong>{{ result.preview_rows }}</strong> row(s).</p>
+        <p class="warn">Check the SQL above carefully, then confirm.</p>
+        <form action="/confirm" method="post">
+          <button type="submit">Confirm and run</button>
+        </form>
+      {% elif result.kind == 'SELECT' %}
+        <h2>Result — {{ result.count }} row(s) in {{ result.seconds }}s</h2>
+        {% if result.rows %}
+        <table>
+          <tr>{% for c in result.columns %}<th>{{ c }}</th>{% endfor %}</tr>
+          {% for row in result.rows %}
+          <tr>{% for v in row %}<td>{{ v }}</td>{% endfor %}</tr>
+          {% endfor %}
+        </table>
+        <p><a href="/export">Download results as CSV</a></p>
+        {% else %}
+        <p>No rows matched.</p>
+        {% endif %}
+      {% else %}
+        <p class="ok">{{ result.message }}</p>
+      {% endif %}
+    {% else %}
+      <h2>Could not run that</h2>
+      <p class="error">{{ result.error }}</p>
+      {% if result.sql %}
+      <p>SQL the model produced:</p>
+      <pre>{{ result.sql }}</pre>
+      {% endif %}
+      <p class="hint">Try rephrasing your question, and check the schema on the right for the exact table and column names.</p>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  <aside class="schema">
+    <h2>Database schema</h2>
+    {% for table, cols in schema.items() %}
+    <h3>{{ table }}</h3>
+    <p>{{ cols | join(', ') }}</p>
+    {% endfor %}
+  </aside>
+
+  {% if history %}
+  <section class="history">
+    <h2>Recent questions</h2>
+    <ul>
+      {% for h in history %}
+      <li><strong>{{ h.question }}</strong><br><code>{{ h.sql }}</code>
+        {% if h.ok %} — {{ h.kind }}{% if h.rows is defined %}, {{ h.rows }} row(s){% endif %}{% if h.affected is defined %}, {{ h.affected }} row(s) affected{% endif %}
+        {% else %} — did not run: {{ h.error }}{% endif %}</li>
+      {% endfor %}
+    </ul>
+  </section>
+  {% endif %}
+</main>
+
+<footer>
+  <p>Model: tiny transformer trained from scratch (no pretrained weights). Database: local SQLite file, no server, no password.</p>
+</footer>
+</body>
+</html>
